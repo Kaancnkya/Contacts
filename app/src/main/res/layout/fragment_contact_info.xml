@@ -1,70 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.fragment.ContactInfoFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="128dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <data>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextName"
-            android:layout_width="match_parent"
+        <variable
+            name="contactInfoTitle"
+            type="String" />
+
+        <variable
+            name="contactInfoFragment"
+            type="com.example.contacts.ui.fragment.ContactInfoFragment" />
+        <variable
+            name="personClass"   type="com.example.contacts.data.entity.Person" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.fragment.ContactInfoFragment">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputName"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Name" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="128dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputNumber"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputName">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextName"
+                android:text="@{personClass.name}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextNumber"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputNumber"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="PhoneNumber" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputName">
 
-    <Button
-        android:id="@+id/buttonUpdate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
-        android:layout_marginEnd="32dp"
-        android:text="UPDATE"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputNumber" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarContactInfo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextNumber"
+                android:text="@{personClass.number}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="PhoneNumber" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/buttonUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="32dp"
+            android:text="UPDATE"
+            android:onClick="@{() -> contactInfoFragment.updateButton(personClass.id , editTextNumber.getText().toString(),editTextName.getText().toString())}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputNumber" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarContactInfo"
+            android:layout_width="0dp"
+            app:title="@{contactInfoTitle}"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

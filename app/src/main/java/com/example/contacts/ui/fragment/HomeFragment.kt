@@ -13,41 +13,38 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.contacts.R
 import com.example.contacts.data.entity.Person
 import com.example.contacts.databinding.FragmentHomeBinding
 import com.example.contacts.ui.adapter.PersonAdapter
+import com.example.contacts.ui.viewModel.HomeViewModel
+import com.example.contacts.ui.viewModel.RegistrationViewModel
+import com.example.contacts.util.switchPage
 
 class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
     private lateinit var binding: FragmentHomeBinding
+    private lateinit var viewModel: HomeViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater,container,false)
-
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_home,container,false)
+        binding.homeFragment = this
+        binding.homeTitle = "CONTACTS"
         (activity as AppCompatActivity).setSupportActionBar(binding.toolbarHomePage)
 
+        viewModel.personList.observe(viewLifecycleOwner){
+            val adapter = PersonAdapter(requireContext(), it, viewModel)
+            binding.personAdapter = adapter
+        }
 
-        binding.toolbarHomePage.title = "CONTACTS"
 
-        binding.rv.layoutManager = LinearLayoutManager(requireContext())
-
-        val personList = ArrayList<Person>()
-        val p1 = Person(1 , "Kaan" , "1111")
-        val p2 = Person(2 , "Ugur" , "1145")
-        val p3 = Person(3 , "Semra" , "1261")
-        val p4 = Person(4 , "Deniz" , "1145")
-        personList.add(p1)
-        personList.add(p2)
-        personList.add(p3)
-        personList.add(p4)
-
-        val adapter = PersonAdapter(requireContext(), personList)
-        binding.rv.adapter = adapter
 
         binding.floatingActionButton.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.homeToRegister)
@@ -71,21 +68,31 @@ class HomeFragment : Fragment(),SearchView.OnQueryTextListener {
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val viewModelHome : HomeViewModel by viewModels()
+        viewModel = viewModelHome
+    }
+
+    fun fabClick(it : View){
+        Navigation.switchPage(it,R.id.homeToRegister)
+
+    }
+
     override fun onQueryTextSubmit(query: String): Boolean {
-        search(query)
+        viewModel.search(query)
         return true
     }
 
     override fun onQueryTextChange(newText: String): Boolean {
-        search(newText)
+        viewModel.search(newText)
         return true
     }
 
-    fun search(writtenWordOnSearch : String){
-        Log.e("Written Word", writtenWordOnSearch)
-    }
+
 
     override fun onResume() {
         super.onResume()
+        viewModel.getAll()
     }
 }
